@@ -188,13 +188,13 @@
                     </select>
                 </div>
     
-                <div class="form-group">
+                {{-- <div class="form-group">
                     <label for="br_status">Status Barang:</label>
                     <select name="br_status" id="br_status" required>
                         <option value="1">Aktif</option>
                         <option value="2">Tidak Aktif</option>
                     </select>
-                </div>
+                </div> --}}
     
                 <button type="submit">Simpan</button>
             </form>

@@ -27,7 +27,7 @@ class DatabaseSeeder extends Seeder
             'user_id' => '2',
             'user_nama' => 'Admin',
             'user_pass' => Hash::make('password'),
-            'user_hak' => 'admin',
+            'user_hak' => 'ad',
             'user_sts' => '1',
         ]);
     }

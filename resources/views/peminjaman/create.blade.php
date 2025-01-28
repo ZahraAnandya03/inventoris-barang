@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -27,6 +28,7 @@
         }
     </style>
 </head>
+
 <body>
 
     <!-- Sidebar -->
@@ -35,13 +37,16 @@
         <a href="{{ route('dashboard') }}"><i class="fas fa-home"></i> Home</a>
         <a href="#barang-inventaris" data-bs-toggle="collapse"><i class="fas fa-boxes"></i> Barang Inventaris</a>
         <div id="barang-inventaris" class="collapse show">
-            <a href="{{ route('barang.index')}}" class="ms-3"><i class="fas fa-list"></i> Daftar Barang</a>
-            <a href="{{ route('barang.create') }}" class="ms-3"><i class="fas fa-plus-circle"></i> Penerimaan Barang</a>
+            <a href="{{ route('barang.index') }}" class="ms-3"><i class="fas fa-list"></i> Daftar Barang</a>
+            <a href="{{ route('barang.create') }}" class="ms-3"><i class="fas fa-plus-circle"></i> Penerimaan
+                Barang</a>
         </div>
         <a href="#peminjaman-barang" data-bs-toggle="collapse"><i class="fas fa-exchange-alt"></i> Peminjaman Barang</a>
         <div id="peminjaman-barang" class="collapse">
-            <a href="{{ route('peminjaman.index')}}" class="ms-3"><i class="fas fa-file-alt"></i> Daftar Peminjaman</a>
-            <a href="{{ route('pengembalian.index')}}" class="ms-3"><i class="fas fa-undo"></i> Pengembalian Barang</a>
+            <a href="{{ route('peminjaman.index') }}" class="ms-3"><i class="fas fa-file-alt"></i> Daftar
+                Peminjaman</a>
+            <a href="{{ route('pengembalian.index') }}" class="ms-3"><i class="fas fa-undo"></i> Pengembalian
+                Barang</a>
             <a href="#barang-belum-kembali" class="ms-3"><i class="fas fa-file-alt"></i> Barang Belum Kembali</a>
         </div>
         <a href="#laporan" data-bs-toggle="collapse"><i class="fas fa-folder-open"></i> Laporan</a>
@@ -81,7 +86,7 @@
             <!-- User Info -->
             <div class="user-info d-flex align-items-center gap-2">
                 <i class="fa fa-user-circle" style="font-size: 40px;"></i>
-                <button class="btn btn-outline-danger btn-sm" 
+                <button class="btn btn-outline-danger btn-sm"
                     onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                     Logout
                 </button>
@@ -96,57 +101,59 @@
     <div class="content">
         <div class="container">
             <h2 class="text-center mb-4">Tambah Peminjaman</h2>
-            
+
             <form action="{{ route('peminjaman.store') }}" method="POST">
                 @csrf
-{{--     
+                {{--     
                 <div class="mb-3">
                     <label for="user_id" class="form-label">User ID</label>
                     <input type="text" class="form-control" id="user_id" name="user_id" required>
                 </div> --}}
-    
+
                 <div class="mb-3">
                     <label for="pb_nama_siswa" class="form-label">Nama Siswa</label>
                     <input type="text" class="form-control" id="pb_nama_siswa" name="pb_nama_siswa" required>
                 </div>
-    
+
                 <div class="mb-3">
                     <label for="pb_no_siswa" class="form-label">No Siswa</label>
                     <input type="text" class="form-control" id="pb_no_siswa" name="pb_no_siswa" required>
                 </div>
-{{-- 
+                {{-- 
                 <div class="mb-3">
                     <label for="barang_id" class="form-label">Barang yang Dipinjam</label>
                     <select class="form-control" id="barang_id" name="barang_id" required>
                         <option value="">Pilih Barang</option>
-                        @foreach($barangs as $barang)
+                        @foreach ($barangs as $barang)
                             <option value="{{ $barang->br_kode }}">{{ $barang->br_nama }}</option>
                         @endforeach
                     </select>
                 </div> --}}
-    
+
                 <div class="mb-3">
                     <label for="pb_tgl" class="form-label">Tanggal Peminjaman</label>
                     <input type="datetime-local" class="form-control" id="pb_tgl" name="pb_tgl" required>
                 </div>
-    
+
                 <div class="mb-3">
                     <label for="pb_harus_kembali_tgl" class="form-label">Tanggal Harus Kembali</label>
-                    <input type="datetime-local" class="form-control" id="pb_harus_kembali_tgl" name="pb_harus_kembali_tgl" required>
+                    <input type="datetime-local" class="form-control" id="pb_harus_kembali_tgl"
+                        name="pb_harus_kembali_tgl" required>
                 </div>
-    
-                <div class="mb-3">
+
+                {{-- <div class="mb-3">
                     <label for="pb_stat" class="form-label">Status</label>
                     <select class="form-control" id="pb_stat" name="pb_stat" required>
                         <option value="01"> Dipinjam</option>
                     </select>
-                </div>
-    
+                </div> --}}
+
                 <button type="submit" class="btn btn-primary">Simpan</button>
                 <a href="{{ route('peminjaman.index') }}" class="btn btn-secondary">Batal</a>
             </form>
         </div>
     </div>
-    
+
 </body>
+
 </html>

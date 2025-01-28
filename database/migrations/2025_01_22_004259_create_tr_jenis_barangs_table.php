@@ -9,14 +9,13 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up()
+    public function up(): void
     {
-        // Tabel referensi jenis barang
-        Schema::create('tr_jenis_barang', function (Blueprint $table) {
+        Schema::create('tr_jenis_barangs', function (Blueprint $table) {
             $table->string('jns_brg_kode', 5)->primary();
             $table->string('jns_brg_nama', 50);
             $table->timestamps();
-        });        
+        });
     }
 
     /**

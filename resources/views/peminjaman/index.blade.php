@@ -123,9 +123,16 @@
                                 <td>{{ \Carbon\Carbon::parse($peminjaman->pb_tgl)->format('d-m-Y H:i') }}</td>
                                 <td>{{ \Carbon\Carbon::parse($peminjaman->pb_harus_kembali_tgl)->format('d-m-Y H:i') }}
                                 </td>
-                                <td>
-                                    <span class="badge bg-warning">Dipinjam</span>
-                                </td>
+                                @if ($peminjaman->pb_stat == null)
+                                    <td><a href="{{ route('pinjam-barang-list', $peminjaman->pb_id) }}"
+                                            class="btn btn-primary">Pilih Barang</td>
+                                @elseif($peminjaman->pengembalian != null)
+                                    <td class="text-danger">Sudah Kembali</td>
+                                @else
+                                    <td class="text-success">
+                                        Sedang Meminjam
+                                    </td>
+                                @endif
                                 <td>
                                     <!-- Tombol Hapus -->
                                     <button type="button" class="btn btn-sm btn-danger"
@@ -146,121 +153,120 @@
                 </table>
             </div>
         </div>
-            <!-- Modal Edit Peminjaman -->
-            <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel"
-                aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="editModalLabel">Edit Peminjaman Barang</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <form id="editForm" method="POST" action="">
-                                @csrf
-                                @method('PUT')
+        <!-- Modal Edit Peminjaman -->
+        <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editModalLabel">Edit Peminjaman Barang</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="editForm" method="POST" action="">
+                            @csrf
+                            @method('PUT')
 
-                                <!-- Input ID (Hidden) -->
-                                <input type="hidden" name="pb_id" id="editPbId">
+                            <!-- Input ID (Hidden) -->
+                            <input type="hidden" name="pb_id" id="editPbId">
 
-                                <!-- Input Nama Siswa -->
-                                <div class="mb-3">
-                                    <label for="editNamaSiswa" class="form-label">Nama Siswa</label>
-                                    <input type="text" class="form-control" id="editNamaSiswa"
-                                        name="pb_nama_siswa" required>
-                                </div>
+                            <!-- Input Nama Siswa -->
+                            <div class="mb-3">
+                                <label for="editNamaSiswa" class="form-label">Nama Siswa</label>
+                                <input type="text" class="form-control" id="editNamaSiswa" name="pb_nama_siswa"
+                                    required>
+                            </div>
 
-                                <!-- Input No Siswa -->
-                                <div class="mb-3">
-                                    <label for="editNoSiswa" class="form-label">No Siswa</label>
-                                    <input type="text" class="form-control" id="editNoSiswa" name="pb_no_siswa"
-                                        required>
-                                </div>
+                            <!-- Input No Siswa -->
+                            <div class="mb-3">
+                                <label for="editNoSiswa" class="form-label">No Siswa</label>
+                                <input type="text" class="form-control" id="editNoSiswa" name="pb_no_siswa"
+                                    required>
+                            </div>
 
-                                <!-- Input Tanggal Peminjaman -->
-                                <div class="mb-3">
-                                    <label for="editTanggalPeminjaman" class="form-label">Tanggal Peminjaman</label>
-                                    <input type="datetime-local" class="form-control" id="editTanggalPeminjaman"
-                                        name="pb_tgl" required>
-                                </div>
+                            <!-- Input Tanggal Peminjaman -->
+                            <div class="mb-3">
+                                <label for="editTanggalPeminjaman" class="form-label">Tanggal Peminjaman</label>
+                                <input type="datetime-local" class="form-control" id="editTanggalPeminjaman"
+                                    name="pb_tgl" required>
+                            </div>
 
-                                <!-- Input Harus Kembali -->
-                                <div class="mb-3">
-                                    <label for="editHarusKembali" class="form-label">Harus Kembali</label>
-                                    <input type="datetime-local" class="form-control" id="editHarusKembali"
-                                        name="pb_harus_kembali_tgl" required>
-                                </div>
+                            <!-- Input Harus Kembali -->
+                            <div class="mb-3">
+                                <label for="editHarusKembali" class="form-label">Harus Kembali</label>
+                                <input type="datetime-local" class="form-control" id="editHarusKembali"
+                                    name="pb_harus_kembali_tgl" required>
+                            </div>
 
-                                <!-- Input Status -->
-                                <div class="mb-3">
-                                    <label for="editStatus" class="form-label">Status</label>
-                                    <select class="form-select" id="editStatus" name="pb_stat" required>
-                                        <option value="01">Dipinjam</option>
-                                        <option value="02">Sudah Kembali</option>
-                                        <option value="03">Tidak Diketahui</option>
-                                    </select>
-                                </div>
+                            <!-- Input Status -->
+                            <div class="mb-3">
+                                <label for="editStatus" class="form-label">Status</label>
+                                <select class="form-select" id="editStatus" name="pb_stat" required>
+                                    <option value="01">Dipinjam</option>
+                                    <option value="02">Sudah Kembali</option>
+                                    <option value="03">Tidak Diketahui</option>
+                                </select>
+                            </div>
 
-                                <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
-                            </form>
-                        </div>
+                            <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                        </form>
                     </div>
                 </div>
+            </div>
         </div>
     </div>
 
-            <script>
-                // Fungsi konfirmasi penghapusan dengan SweetAlert2
-                function confirmDelete(pb_id) {
-                    Swal.fire({
-                        title: 'Apakah Anda yakin?',
-                        text: "Data peminjaman ini akan dihapus dan tidak bisa dikembalikan!",
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#d33',
-                        cancelButtonColor: '#3085d6',
-                        confirmButtonText: 'Ya, hapus!',
-                        cancelButtonText: 'Batal'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            var form = document.createElement('form');
-                            form.method = 'POST';
-                            form.action = '{{ route('peminjaman.destroy', '') }}/' + pb_id;
+    <script>
+        // Fungsi konfirmasi penghapusan dengan SweetAlert2
+        function confirmDelete(pb_id) {
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: "Data peminjaman ini akan dihapus dan tidak bisa dikembalikan!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = '{{ route('peminjaman.destroy', '') }}/' + pb_id;
 
-                            var csrfToken = document.createElement('input');
-                            csrfToken.type = 'hidden';
-                            csrfToken.name = '_token';
-                            csrfToken.value = '{{ csrf_token() }}';
-                            form.appendChild(csrfToken);
+                    var csrfToken = document.createElement('input');
+                    csrfToken.type = 'hidden';
+                    csrfToken.name = '_token';
+                    csrfToken.value = '{{ csrf_token() }}';
+                    form.appendChild(csrfToken);
 
-                            var methodInput = document.createElement('input');
-                            methodInput.type = 'hidden';
-                            methodInput.name = '_method';
-                            methodInput.value = 'DELETE';
-                            form.appendChild(methodInput);
+                    var methodInput = document.createElement('input');
+                    methodInput.type = 'hidden';
+                    methodInput.name = '_method';
+                    methodInput.value = 'DELETE';
+                    form.appendChild(methodInput);
 
-                            document.body.appendChild(form);
-                            form.submit();
-                        }
-                    });
+                    document.body.appendChild(form);
+                    form.submit();
                 }
+            });
+        }
 
-                //fungsi edit
-                function onEdit(pb_id, user_id, nama_siswa, no_siswa, tgl_peminjaman, harus_kembali_tgl, status) {
-                    // Menyisipkan data yang diterima ke dalam modal
-                    document.getElementById('editPbId').value = pb_id;
-                    document.getElementById('editNamaSiswa').value = nama_siswa;
-                    document.getElementById('editNoSiswa').value = no_siswa;
-                    document.getElementById('editTanggalPeminjaman').value = tgl_peminjaman;
-                    document.getElementById('editHarusKembali').value = harus_kembali_tgl;
-                    document.getElementById('editStatus').value = status;
+        //fungsi edit
+        function onEdit(pb_id, user_id, nama_siswa, no_siswa, tgl_peminjaman, harus_kembali_tgl, status) {
+            // Menyisipkan data yang diterima ke dalam modal
+            document.getElementById('editPbId').value = pb_id;
+            document.getElementById('editNamaSiswa').value = nama_siswa;
+            document.getElementById('editNoSiswa').value = no_siswa;
+            document.getElementById('editTanggalPeminjaman').value = tgl_peminjaman;
+            document.getElementById('editHarusKembali').value = harus_kembali_tgl;
+            document.getElementById('editStatus').value = status;
 
-                    // Memperbarui action form edit untuk memanggil update sesuai ID
-                    let form = document.getElementById('editForm');
-                    form.setAttribute('action', '{{ url('peminjaman') }}/' + pb_id);
-                }
-            </script>
+            // Memperbarui action form edit untuk memanggil update sesuai ID
+            let form = document.getElementById('editForm');
+            form.setAttribute('action', '{{ url('peminjaman') }}/' + pb_id);
+        }
+    </script>
 </body>
 
 </html>

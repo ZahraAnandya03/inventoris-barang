@@ -22,6 +22,7 @@ class LoginController extends Controller
             'user_pass' => 'required',
         ]);
 
+        // dd($request->all());
     
         // Get the credentials from the request
         $credentials = [

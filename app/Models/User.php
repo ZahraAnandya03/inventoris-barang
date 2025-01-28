@@ -2,66 +2,31 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Model;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
+    protected $table = 'tm_users';
     protected $primaryKey = 'user_id';
+    public $incrementing = false;
     protected $keyType = 'string';
-    protected $table = "tm_user";
-        protected $fillable = [
-        'user_id',
-        'user_nama',
-        'user_pass',
-        'user_hak',
-        'user_sts',
-    ];
 
-
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
-    protected $hidden = [
-        'user_pass',
-        // 'remember_token',
-    ];
-
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
+    public function barangInventaris()
     {
-        return [
-            // 'email_verified_at' => 'datetime',
-            'user_pass' => 'hashed',
-        ];
+        return $this->hasMany(tm_barang_inventaris::class, 'user_id', 'user_id');
     }
 
-    // public function peminjaman()
-    // {
-    //     return $this->hasMany(Peminjaman::class, 'user_id', 'user_id');
-    // }
+    public function peminjaman()
+    {
+        return $this->hasMany(tm_peminjaman::class, 'user_id', 'user_id');
+    }
 
-    // // Relasi ke Pengembalian
-    // public function pengembalian()
-    // {
-    //     return $this->hasMany(Pengembalian::class, 'user_id', 'user_id');
-    // }
-    
-
+    public function pengembalian()
+    {
+        return $this->hasMany(tm_pengembalian::class, 'user_id', 'user_id');
+    }
 }

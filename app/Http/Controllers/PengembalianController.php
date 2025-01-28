@@ -2,55 +2,45 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\TmPeminjaman;
-use App\Models\TmPengembalian;
-use App\Models\BarangInventaris;
+use App\Models\tm_peminjaman;
+use App\Models\tm_pengembalian;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 
 class PengembalianController extends Controller
 {
     public function index()
     {
-        $pengembalian = TmPengembalian::with('peminjaman')->get();
+        $pengembalian = tm_pengembalian::with('peminjaman')->get();
         return view('pengembalian.index', compact('pengembalian'));
     }
 
 
     public function create()
     {
-        $peminjaman = TmPeminjaman::whereNotIn('pb_id', function ($query) {
-            $query->select('pb_id')->from('tm_pengembalian');
+        $peminjaman = tm_peminjaman::where('pb_stat', 1)->whereNotIn('pb_id', function ($query) {
+            $query->select('pb_id')->from('tm_pengembalians');
         })->get();
         return view('pengembalian.create', compact('peminjaman'));
     }
-    // git init
-    // git add .
-    // git commit -m "first commit"
-    // git branch -M main
-    // git remote add origin https://github.com/ZahraAnandya03/inventoris-barang.git
-    // git push -u origin main
+
     public function store(Request $request)
     {
-        $peminjaman = TmPeminjaman::where('pb_id', $request->pb_id)->with(['peminjamanBarang', 'pengembalian'])->first();
+        $peminjaman = tm_peminjaman::where('pb_id', $request->pb_id)->with(['peminjamanBarang', 'pengembalian'])->first();
 
-        $dataterakhir = TmPeminjaman::orderBy('created_at', 'desc')->first();
+        $dataterakhir = tm_pengembalian::orderBy('created_at', 'desc')->first();
         if ($dataterakhir == null) {
             $kembali_id = 'KB' . date('Ym') . 001;
         } else {
             $kembali_id = 'KB' . (substr($dataterakhir->pb_id, 2) + 1);
         }
 
-        foreach ($peminjaman->peminjaman as $peminjaman) {
-            $peminjaman->pdb_sts = 0;
-            $peminjaman->save();
+        foreach ($peminjaman->peminjamanBarang as $peminjamanBarang) {
+            $peminjamanBarang->pdb_sts = 0;
+            $peminjamanBarang->save();
         }
-        
-
-
-        TmPengembalian::create([
+        tm_pengembalian::create([
             'kembali_id' => $kembali_id,
             'pb_id' => $request->pb_id,
             'user_id' => Auth::user()->user_id,
@@ -58,14 +48,13 @@ class PengembalianController extends Controller
             'kembali_sts' => 1,
         ]);
 
-
         return redirect()->back()->with('success', 'Berhasil mengembalikan barang');
     }
 
 
     public function edit($id)
     {
-        $pengembalian = TmPengembalian::findOrFail($id);
+        $pengembalian = tm_pengembalian::findOrFail($id);
         return view('pengembalian.edit', compact('pengembalian'));
     }
 
@@ -76,7 +65,7 @@ class PengembalianController extends Controller
             'kembali_sts' => 'required|in:01,02,03',
         ]);
 
-        $pengembalian = TmPengembalian::findOrFail($id);
+        $pengembalian = tm_pengembalian::findOrFail($id);
         $pengembalian->update($request->only(['kembali_tgl', 'kembali_sts']));
 
         return redirect()->route('pengembalian.index')->with('success', 'Data pengembalian berhasil diperbarui.');
@@ -84,7 +73,7 @@ class PengembalianController extends Controller
 
     public function destroy($id)
     {
-        TmPengembalian::findOrFail($id)->delete();
+        tm_pengembalian::findOrFail($id)->delete();
         return redirect()->route('pengembalian.index')->with('success', 'Data pengembalian berhasil dihapus.');
     }
 }
